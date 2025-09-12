@@ -1,0 +1,38 @@
+# Copyright The OpenTelemetry Authors
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: 1
+
+datasources:
+  - name: Tinybird OTel Local
+    uid: tinybird-otel-local
+    type: grafana-clickhouse-datasource
+    access: proxy
+    editable: true
+    isDefault: false
+    jsonData:
+      defaultDatabase: ${OTEL_TINYBIRD_WORKSPACE_LOCAL}
+      host: ${OTEL_TINYBIRD_CLICKHOUSE_HOST_LOCAL}
+      logs:
+        contextColumns: []
+        defaultDatabase: ${OTEL_TINYBIRD_WORKSPACE_LOCAL}
+        defaultTable: otel_logs
+        otelEnabled: true
+        otelVersion: latest
+        selectContextColumns: true
+      pdcInjected: false
+      port: 7182
+      protocol: http
+      secure: false
+      tlsSkipVerify: false
+      traces:
+        defaultDatabase: ${OTEL_TINYBIRD_WORKSPACE_LOCAL}
+        defaultTable: otel_traces
+        durationUnit: nanoseconds
+        otelEnabled: true
+        otelVersion: latest
+      useOtel: true
+      username: otel
+      version: 4.10.2
+    secureJsonData:
+      password: ${OTEL_TINYBIRD_TOKEN_LOCAL}

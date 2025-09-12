@@ -756,12 +756,21 @@ services:
           memory: 120M
     restart: unless-stopped
     environment:
-      - "GF_INSTALL_PLUGINS=grafana-opensearch-datasource"
+      - "GF_INSTALL_PLUGINS=grafana-opensearch-datasource,grafana-clickhouse-datasource"
+      - OTEL_TINYBIRD_TOKEN_LOCAL
+      - OTEL_TINYBIRD_TOKEN_CLOUD
+      - OTEL_TINYBIRD_CLICKHOUSE_HOST_LOCAL
+      - OTEL_TINYBIRD_CLICKHOUSE_HOST_CLOUD
+      - OTEL_TINYBIRD_WORKSPACE_LOCAL
+      - OTEL_TINYBIRD_WORKSPACE_CLOUD
     volumes:
       - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - "${GRAFANA_PORT}"
+    depends_on:
+      tinybird_local:
+        condition: service_started
     logging: *logging
 
   # OpenTelemetry Collector
@@ -788,6 +797,8 @@ services:
         condition: service_started
       opensearch:
         condition: service_healthy
+      tinybird_local:
+        condition: service_started
     logging: *logging
     environment:
       - FRONTEND_PROXY_ADDR
@@ -797,6 +808,10 @@ services:
       - OTEL_COLLECTOR_HOST
       - OTEL_COLLECTOR_PORT_GRPC
       - OTEL_COLLECTOR_PORT_HTTP
+      - OTEL_TINYBIRD_API_HOST_LOCAL
+      - OTEL_TINYBIRD_API_HOST_CLOUD
+      - OTEL_TINYBIRD_TOKEN_LOCAL
+      - OTEL_TINYBIRD_TOKEN_CLOUD
       - GOMEMLIMIT=160MiB
 
   # Prometheus
@@ -859,3 +874,22 @@ services:
       timeout: 10s
       retries: 10
     logging: *logging
+
+  # Tinybird
+  tinybird_local:
+    image: ${TINYBIRD_IMAGE}
+    platform: linux/amd64
+    container_name: tinybird_local
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    restart: unless-stopped
+    ports:
+      - "7181:7181"
+    logging: *logging
+

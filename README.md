@@ -10,6 +10,14 @@
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/opentelemetry-demo)](https://artifacthub.io/packages/helm/opentelemetry-helm/opentelemetry-demo)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9247/badge)](https://www.bestpractices.dev/en/projects/9247)
 
+## How to run with Tinybird
+
+Just run `make start` to get everything set up.
+
+Then access `http://localhost:8080/grafana` and check the Tinybird OTel demo dashboards.
+
+Check the [Tinybird OTel docs](https://tinybird.co/observability) to learn more.
+
 ## Welcome to the OpenTelemetry Astronomy Shop Demo
 
 This repository contains the OpenTelemetry Astronomy Shop, a microservice-based
