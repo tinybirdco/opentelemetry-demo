@@ -183,14 +183,28 @@ check-clean-work-tree:
 
 .PHONY: start
 start:
+	@echo "Starting OpenTelemetry Demo..."
 	$(DOCKER_COMPOSE_CMD) $(DOCKER_COMPOSE_ENV) up --force-recreate --remove-orphans --detach
+	@./scripts/setup-tinybird.sh
 	@echo ""
 	@echo "OpenTelemetry Demo is running."
+	@echo "Tinybird is available at http://localhost:7181"
 	@echo "Go to http://localhost:8080 for the demo UI."
 	@echo "Go to http://localhost:8080/jaeger/ui for the Jaeger UI."
 	@echo "Go to http://localhost:8080/grafana/ for the Grafana UI."
 	@echo "Go to http://localhost:8080/loadgen/ for the Load Generator UI."
 	@echo "Go to http://localhost:8080/feature/ to change feature flags."
+	@echo ""
+	@echo "For Tinybird Cloud deployment:"
+	@echo "1. Run: cd tinybird && tb login"
+	@echo "2. Run: tb --cloud deploy  # if you deployed the template locally otherwise run: tb --cloud deploy --template https://github.com/tinybirdco/tinybird-otel-template/tree/main/"
+	@echo "3. Run: tb --show-tokens --cloud info"
+	@echo "4. Set these environment variables in .env:"
+	@echo "   OTEL_TINYBIRD_API_HOST_CLOUD=<your_tinybird_api_host>"
+	@echo "   OTEL_TINYBIRD_CLICKHOUSE_HOST_CLOUD=<your_tinybird_clickhouse_host>"
+	@echo "   OTEL_TINYBIRD_TOKEN_CLOUD=<your_tinybird_token>"
+	@echo "   OTEL_TINYBIRD_WORKSPACE_CLOUD=<your_tinybird_workspace_name>"
+	@echo ""
 
 .PHONY: start-minimal
 start-minimal:
